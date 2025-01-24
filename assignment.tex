@@ -1,0 +1,147 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{graphicx}
+
+\title{Final Assignment: Computer Workshop Course}
+\author{Iran University of Science and Technology \\ Department of Computer Engineering}
+\date{Due Date: 6 Bahman}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Git and GitHub}
+
+\subsection{Repository Initialization and Commits}
+To set up the repository for this assignment, I followed these steps:
+\begin{enumerate}
+    \item Created a new repository on GitHub with a suitable name for the project.
+    \item Cloned the repository to my local machine using the command:
+    \begin{verbatim}
+    git clone <repository-url>
+    \end{verbatim}
+    \item Created the LaTeX file for the assignment and made an initial commit using:
+    \begin{verbatim}
+    git add .
+    git commit -m "Initial commit: Added main LaTeX file."
+    \end{verbatim}
+    \item Pushed the changes to the GitHub repository:
+    \begin{verbatim}
+    git push origin main
+    \end{verbatim}
+\end{enumerate}
+
+\subsection{GitHub Actions for LaTeX Compilation}
+To automate the compilation of the LaTeX document using GitHub Actions, I:
+\begin{enumerate}
+    \item Created a workflow file named \texttt{latex-build.yml} in the \texttt{.github/workflows} directory.
+    \item Added the following configuration to the workflow file:
+    \begin{verbatim}
+    name: Build LaTeX Document
+
+    on:
+      push:
+        tags:
+          - "*"
+
+    jobs:
+      build:
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v3
+
+        - name: Set up TeX Live
+          uses: xu-cheng/latex-action@v2
+          with:
+            root_file: assignment.tex
+
+        - name: Compile LaTeX document
+          run: latexmk -pdf -silent -f assignment.tex
+
+        - name: Upload PDF to Release
+          uses: ncipollo/release-action@v1
+          with:
+            artifacts: assignment.pdf
+            token: ${{ secrets.GITHUB_TOKEN }}
+            tag: ${{ github.ref_name }}
+    \end{verbatim}
+    \item Encountered and resolved errors related to missing dependencies and workflow validation.
+    \item Successfully triggered the action by creating a new tag using:
+    \begin{verbatim}
+    git tag -a v1.0 -m "First release"
+    git push origin --tags
+    \end{verbatim}
+\end{enumerate}
+
+\section{Exploration Tasks}
+
+\subsection{Vim Advanced Features}
+Three advanced features of Vim are:
+\begin{enumerate}
+    \item \textbf{Macros:} Macros in Vim allow you to record and replay a sequence of commands. To record a macro, use \texttt{q} followed by a register (e.g., \texttt{qa} to record in register \texttt{a}). Replay the macro using \texttt{@a}.
+    \item \textbf{Registers:} Vim has multiple registers to store text, commands, or macros. You can access them using \texttt{"<register>}. For example, \texttt{"ay} copies text into register \texttt{a}.
+    \item \textbf{Split Windows:} Vim allows splitting the screen to work on multiple files or parts of a file. Use \texttt{:split} or \texttt{:vsplit} to create horizontal or vertical splits.
+\end{enumerate}
+
+\subsection{Memory Profiling}
+\subsubsection{Memory Leak}
+A memory leak occurs when a program allocates memory dynamically but fails to release it back to the system, causing reduced available memory over time. This can happen if allocated memory is not freed after use or if references to it are lost.
+
+\subsubsection{Memory Profilers}
+\textbf{Valgrind} is a tool used for memory profiling. It helps detect memory leaks, invalid memory access, and improper use of memory. By running a program through Valgrind, you can identify where memory is being allocated and ensure it is freed properly.
+
+\subsection{GNU/Linux Bash Scripting}
+\subsubsection{fzf}
+\textbf{Fuzzy Searching:} Fuzzy searching allows finding approximate matches rather than exact matches. This is useful for quickly locating files or text without typing the exact name.
+
+\textbf{Installation:} To install \texttt{fzf}, use the following command:
+\begin{verbatim}
+    sudo apt install fzf
+\end{verbatim}
+\textbf{Command Description:}
+\begin{verbatim}
+    ls | fzf
+\end{verbatim}
+This command lists all files in the current directory, pipes them to \texttt{fzf}, and allows the user to interactively select a file.
+
+\subsubsection{Using fzf to Find Your Favorite PDF}
+\begin{enumerate}
+    \item List all PDF files in the directory:
+    \begin{verbatim}
+    fd .pdf
+    \end{verbatim}
+    \item Select a PDF file using \texttt{fzf}:
+    \begin{verbatim}
+    fd .pdf | fzf
+    \end{verbatim}
+\end{enumerate}
+
+\subsubsection{Opening the File Using Zathura}
+To open the selected PDF with Zathura, use the following command:
+\begin{verbatim}
+    zathura $(fd .pdf | fzf)
+\end{verbatim}
+
+\section{Git and FOSS}
+\subsection{README.md}
+A basic \texttt{README.md} file should include:
+\begin{itemize}
+    \item Title of the repository
+    \item Description of its purpose
+    \item Instructions for usage
+\end{itemize}
+
+\subsection{Issues}
+\begin{quote}
+    \url{https://drive.google.com/file/d/1OISv2BAbQIo1dqDNkexs7AE9Kc-deqGp/view?usp=sharing}
+\end{quote}
+
+\subsection{FOSS Contribution}
+I see myself contributing to FOSS projects in the future, particularly in areas related to open-source text editors, version control systems, or educational tools, as they align with my interests and skills.
+
+\end{document}
